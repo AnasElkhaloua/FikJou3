@@ -1,0 +1,29 @@
+# Dependencies
+/node_modules/
+
+# Next.js output
+/.next/
+/out/
+
+# Test output
+/coverage/
+/playwright-report/
+/test-results/
+
+# Local PostgreSQL test state
+/.tmp/
+
+# Local environment files (the example contract is committed)
+.env*
+!.env.example
+
+# Logs and OS/editor files
+*.log
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+
+# TypeScript
+*.tsbuildinfo
+next-env.d.ts

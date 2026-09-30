@@ -1,0 +1,181 @@
+@import "tailwindcss";
+
+:root {
+  color-scheme: light;
+  --fik-background: #f7f7f5;
+  --fik-surface: #ffffff;
+  --fik-primary: #e94b35;
+  --fik-primary-hover: #cf3825;
+  --fik-accent: #f3a83b;
+  --fik-text: #1d1d1b;
+  --fik-muted: #73736f;
+  --fik-border: #e7e5e1;
+  --fik-focus: #1967d2;
+  --fik-success: #287a4d;
+  --fik-warning: #8a5700;
+  --fik-danger: #b42318;
+  --fik-info: #245ea8;
+  --fik-disabled: #aaa9a4;
+  --fik-overlay: rgb(29 29 27 / 48%);
+  --fik-on-primary: #11110f;
+  --radius-control: 0.625rem;
+  --radius-card: 0.875rem;
+  --shadow-card: 0 1px 2px rgb(29 29 27 / 6%);
+  --shadow-overlay: 0 12px 32px rgb(29 29 27 / 14%);
+}
+
+@theme inline {
+  --font-sans: var(--font-geist-sans), Inter, system-ui, sans-serif;
+  --color-background: var(--fik-background);
+  --color-foreground: var(--fik-text);
+  --color-card: var(--fik-surface);
+  --color-primary: var(--fik-primary);
+  --color-primary-hover: var(--fik-primary-hover);
+  --color-accent: var(--fik-accent);
+  --color-muted-foreground: var(--fik-muted);
+  --color-border: var(--fik-border);
+  --color-focus: var(--fik-focus);
+  --color-success: var(--fik-success);
+  --color-warning: var(--fik-warning);
+  --color-danger: var(--fik-danger);
+  --color-info: var(--fik-info);
+  --color-disabled: var(--fik-disabled);
+  --color-overlay: var(--fik-overlay);
+  --color-on-primary: var(--fik-on-primary);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  min-width: 20rem;
+  background: var(--color-background);
+}
+
+body {
+  min-height: 100vh;
+  margin: 0;
+  background: var(--color-background);
+  color: var(--color-foreground);
+  font-family: var(--font-geist-sans), Inter, system-ui, sans-serif;
+  text-rendering: optimizeLegibility;
+}
+
+:focus-visible {
+  outline: 3px solid var(--color-focus);
+  outline-offset: 3px;
+}
+
+::selection {
+  background: color-mix(in srgb, var(--color-accent) 45%, white);
+  color: var(--color-foreground);
+}
+
+.skip-link {
+  position: fixed;
+  inset-block-start: 0.75rem;
+  inset-inline-start: 0.75rem;
+  z-index: 10;
+  translate: 0 -200%;
+  border-radius: var(--radius-control);
+  background: var(--color-foreground);
+  color: var(--color-card);
+  padding: 0.75rem 1rem;
+  text-decoration: none;
+}
+
+.skip-link:focus {
+  translate: 0;
+}
+
+.app-frame {
+  min-height: 100vh;
+}
+
+.site-header {
+  display: flex;
+  min-height: 4rem;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  border-block-end: 1px solid var(--color-border);
+  background: var(--color-card);
+  padding-inline: clamp(1rem, 4vw, 3rem);
+}
+
+.brand {
+  font-size: 1.125rem;
+  font-weight: 750;
+  letter-spacing: -0.03em;
+}
+
+.phase-badge {
+  border: 1px solid
+    color-mix(in srgb, var(--color-primary) 35%, var(--color-border));
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--color-primary) 8%, white);
+  color: #a52d1d;
+  padding: 0.375rem 0.625rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.foundation-main {
+  display: grid;
+  min-height: calc(100vh - 4rem);
+  place-items: center;
+  padding: clamp(1rem, 5vw, 4rem);
+}
+
+.foundation-panel {
+  width: min(100%, 42rem);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-card);
+  background: var(--color-card);
+  box-shadow: var(--shadow-card);
+  padding: clamp(1.5rem, 6vw, 4rem);
+}
+
+.eyebrow {
+  margin: 0 0 0.75rem;
+  color: var(--color-primary-hover);
+  font-size: 0.8125rem;
+  font-weight: 750;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+h1 {
+  margin: 0;
+  max-width: 14ch;
+  font-size: clamp(2.25rem, 9vw, 4.75rem);
+  line-height: 0.98;
+  letter-spacing: -0.055em;
+}
+
+.foundation-copy {
+  max-width: 54ch;
+  margin: 1.5rem 0 0;
+  color: var(--color-muted-foreground);
+  font-size: clamp(1rem, 2.4vw, 1.125rem);
+  line-height: 1.65;
+}
+
+.arabic-sample {
+  margin: 2rem 0 0;
+  border-inline-start: 3px solid var(--color-accent);
+  padding-inline-start: 0.75rem;
+  color: var(--color-foreground);
+  font-family:
+    "Noto Sans Arabic", var(--font-geist-sans), system-ui, sans-serif;
+  font-size: 1.125rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+  }
+}

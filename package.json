@@ -1,0 +1,57 @@
+{
+  "name": "fik-jou3",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Morocco-first marketplace for homemade food.",
+  "engines": {
+    "node": ">=22.12.0 <23"
+  },
+  "packageManager": "npm@11.19.1",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint . --max-warnings=0",
+    "typecheck": "tsc --noEmit",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "test": "vitest run --config vitest.config.ts",
+    "test:watch": "vitest --config vitest.config.ts",
+    "test:integration": "vitest run --config vitest.integration.config.ts",
+    "test:e2e": "playwright test",
+    "test:all": "npm run test && npm run test:integration && npm run test:e2e",
+    "deps:check": "npm ci --ignore-scripts --dry-run",
+    "db:migrate:check": "node scripts/phase-gate.mjs migration",
+    "db:seed:check": "node scripts/phase-gate.mjs seed",
+    "quality": "npm run format:check && npm run lint && npm run typecheck && npm run test && npm run test:integration && npm run test:e2e && npm run build"
+  },
+  "dependencies": {
+    "class-variance-authority": "0.7.1",
+    "clsx": "2.1.1",
+    "geist": "1.7.2",
+    "lucide-react": "1.49.0",
+    "next": "16.3.7",
+    "react": "19.3.0",
+    "react-dom": "19.3.0",
+    "server-only": "0.0.1",
+    "tailwind-merge": "3.7.0",
+    "zod": "4.6.5"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.63.0",
+    "@tailwindcss/postcss": "4.3.3",
+    "@types/node": "22.20.4",
+    "@types/react": "19.3.0",
+    "@types/react-dom": "19.3.0",
+    "eslint": "9.39.5",
+    "eslint-config-next": "16.3.7",
+    "pg-embedded": "0.2.3",
+    "prettier": "3.9.9",
+    "prettier-plugin-tailwindcss": "0.8.1",
+    "tailwindcss": "4.3.3",
+    "typescript": "5.9.3",
+    "vite": "8.3.1",
+    "vitest": "5.0.2"
+  }
+}
