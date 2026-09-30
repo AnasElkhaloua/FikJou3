@@ -1,0 +1,53 @@
+{
+  "Metadata": {
+    "title": "Fik Jou3?",
+    "description": "Find homemade food near you in Morocco."
+  },
+  "Shell": {
+    "skipToContent": "Skip to content",
+    "phase": "Database & Auth",
+    "language": "Language",
+    "english": "English",
+    "french": "French"
+  },
+  "Home": {
+    "eyebrow": "Phase 01",
+    "title": "Your account foundation is ready.",
+    "description": "Secure authentication and localized account access are now available. Marketplace discovery begins in a later phase.",
+    "register": "Create account",
+    "login": "Log in"
+  },
+  "Auth": {
+    "name": "Name",
+    "email": "Email address",
+    "password": "Password",
+    "newPassword": "New password",
+    "registerTitle": "Create your account",
+    "registerSubmit": "Create account",
+    "loginTitle": "Welcome back",
+    "loginSubmit": "Log in",
+    "forgotTitle": "Reset your password",
+    "forgotDescription": "If an account exists for that address, we’ll send reset instructions.",
+    "forgotSubmit": "Send reset instructions",
+    "resetTitle": "Choose a new password",
+    "resetSubmit": "Update password",
+    "verifyTitle": "Verify your email",
+    "verifyDescription": "Use the verification link sent to your email address before using protected marketplace features.",
+    "verificationSuccess": "Your email address has been verified.",
+    "verificationError": "This verification link is invalid or has expired.",
+    "genericSuccess": "Your request was received. Check your email for the next step.",
+    "genericError": "We couldn’t complete that request. Check the details and try again.",
+    "passwordHint": "Use at least 12 characters.",
+    "forgotLink": "Forgot your password?",
+    "loginLink": "Already have an account? Log in",
+    "registerLink": "Need an account? Register",
+    "working": "Working…",
+    "signOut": "Sign out"
+  },
+  "Validation": {
+    "nameRequired": "Enter your name.",
+    "emailInvalid": "Enter a valid email address.",
+    "passwordLength": "Use between 12 and 128 characters.",
+    "tokenMissing": "The reset token is missing. Request a new link."
+  }
+}

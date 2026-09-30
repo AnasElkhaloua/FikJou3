@@ -1,0 +1,53 @@
+{
+  "Metadata": {
+    "title": "Fik Jou3 ?",
+    "description": "Trouvez des plats faits maison près de chez vous au Maroc."
+  },
+  "Shell": {
+    "skipToContent": "Aller au contenu",
+    "phase": "Base de données et compte",
+    "language": "Langue",
+    "english": "Anglais",
+    "french": "Français"
+  },
+  "Home": {
+    "eyebrow": "Phase 01",
+    "title": "La base de votre compte est prête.",
+    "description": "L’authentification sécurisée et l’accès localisé au compte sont maintenant disponibles. La découverte des offres arrivera dans une phase ultérieure.",
+    "register": "Créer un compte",
+    "login": "Se connecter"
+  },
+  "Auth": {
+    "name": "Nom",
+    "email": "Adresse e-mail",
+    "password": "Mot de passe",
+    "newPassword": "Nouveau mot de passe",
+    "registerTitle": "Créez votre compte",
+    "registerSubmit": "Créer un compte",
+    "loginTitle": "Heureux de vous revoir",
+    "loginSubmit": "Se connecter",
+    "forgotTitle": "Réinitialisez votre mot de passe",
+    "forgotDescription": "Si un compte correspond à cette adresse, nous enverrons les instructions de réinitialisation.",
+    "forgotSubmit": "Envoyer les instructions",
+    "resetTitle": "Choisissez un nouveau mot de passe",
+    "resetSubmit": "Modifier le mot de passe",
+    "verifyTitle": "Vérifiez votre adresse e-mail",
+    "verifyDescription": "Utilisez le lien envoyé à votre adresse e-mail avant d’accéder aux fonctions protégées de la place de marché.",
+    "verificationSuccess": "Votre adresse e-mail a été vérifiée.",
+    "verificationError": "Ce lien de vérification est invalide ou a expiré.",
+    "genericSuccess": "Votre demande a bien été reçue. Consultez votre messagerie pour continuer.",
+    "genericError": "Impossible de traiter cette demande. Vérifiez les informations et réessayez.",
+    "passwordHint": "Utilisez au moins 12 caractères.",
+    "forgotLink": "Mot de passe oublié ?",
+    "loginLink": "Vous avez déjà un compte ? Connectez-vous",
+    "registerLink": "Pas encore de compte ? Inscrivez-vous",
+    "working": "Traitement en cours…",
+    "signOut": "Se déconnecter"
+  },
+  "Validation": {
+    "nameRequired": "Saisissez votre nom.",
+    "emailInvalid": "Saisissez une adresse e-mail valide.",
+    "passwordLength": "Utilisez entre 12 et 128 caractères.",
+    "tokenMissing": "Le jeton de réinitialisation est absent. Demandez un nouveau lien."
+  }
+}

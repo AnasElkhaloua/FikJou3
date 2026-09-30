@@ -1,6 +1,6 @@
 # Phase 01 — Database and Authentication
 
-Status: Sequential implementation contract
+Status: Complete — 2026-09-30
 
 ## Objective and prerequisites
 
@@ -37,17 +37,17 @@ Run format/lint/type/unit/integration/Playwright/build plus migration replay and
 
 ## Acceptance criteria
 
-- [ ] Empty database migrates to head deterministically; previous migration state upgrades (`03`, `10`).
-- [ ] Seed reruns without duplicates and uses stable natural keys (`03`).
-- [ ] Better Auth flows and secure session/reset policies work (`04`).
-- [ ] Email verification gates protected marketplace capabilities; phone is never falsely verified (`04`).
-- [ ] Seller/user/location/category constraints and indexes match `03`.
-- [ ] Server guards reject unauthenticated, wrong-owner, suspended and non-admin calls (`04`).
-- [ ] Public DTO samples omit email, phone, auth/session and private fields (`04`, `09`).
-- [ ] Rate-limit values/backend/failure mode and CSRF strategy are documented/tested (`04`).
-- [ ] `/en` and `/fr` routing, deterministic fallback/persistence, safe switching and complete auth translations work; unsupported locales cannot load arbitrary resources (`00`, `02`, `04`, `06`).
-- [ ] Active category/location seed rows have one EN and one FR label with locale-neutral identity; user-authored entities have no locale duplicates (`01`, `03`).
-- [ ] All quality commands and production build pass (`10`).
+- [x] Empty database migrates to head deterministically; previous migration state upgrades (`03`, `10`).
+- [x] Seed reruns without duplicates and uses stable natural keys (`03`).
+- [x] Better Auth flows and secure session/reset policies work (`04`).
+- [x] Email verification gates protected marketplace capabilities; phone is never falsely verified (`04`).
+- [x] Seller/user/location/category constraints and indexes match `03`.
+- [x] Server guards reject unauthenticated, wrong-owner, suspended and non-admin calls (`04`).
+- [x] Public DTO samples omit email, phone, auth/session and private fields (`04`, `09`).
+- [x] Rate-limit values/backend/failure mode and CSRF strategy are documented/tested (`04`).
+- [x] `/en` and `/fr` routing, deterministic fallback/persistence, safe switching and complete auth translations work; unsupported locales cannot load arbitrary resources (`00`, `02`, `04`, `06`).
+- [x] Active category/location seed rows have one EN and one FR label with locale-neutral identity; user-authored entities have no locale duplicates (`01`, `03`).
+- [x] All quality commands and production build pass (`10`).
 
 ## Stop conditions
 
@@ -56,3 +56,43 @@ Stop for unresolved Better Auth/schema incompatibility, inability to secure cook
 ## Handoff
 
 Report migration IDs/schema diagram, Better Auth and `next-intl` versions/configuration choices (no secrets), locale/resource structure and parity result, seed keys/EN-FR counts, route/negotiation/switch behavior, guard/DTO APIs, exact rate limits, command/test evidence, limitations and prerequisites for Phase 02.
+
+## Implementation record
+
+### Versions and persistence
+
+- Better Auth `1.7.6`, `@better-auth/drizzle-adapter` `1.7.6`, Drizzle ORM `0.45.3`, Drizzle Kit `0.31.11`, PostgreSQL driver `pg` `8.23.0`, `next-intl` `4.14.8`, and `tsx` `4.23.15` are exact direct pins.
+- Migration `drizzle/0000_magical_cerebro.sql` is the immutable Phase 01 baseline. Drizzle Kit generates committed SQL/snapshots; the application never migrates automatically at runtime. `db:migrate` applies committed migrations explicitly. Production rollback uses reviewed forward-fix migrations; destructive database recreation is limited to empty local/test databases.
+- Application and Better Auth identifiers use PostgreSQL `uuid` columns. Better Auth is configured with `advanced.database.generateId = "uuid"`; database defaults use PostgreSQL `gen_random_uuid()` while deterministic seed identities use fixed documented UUIDs.
+- The initial physical schema has 16 tables: `users`, `sessions`, `accounts`, `verifications`, `rate_limits`, `seller_profiles`, `countries`, `country_translations`, `cities`, `city_translations`, `areas`, `area_translations`, `categories`, `category_translations`, `tags`, and `tag_translations`. No Phase 02+ marketplace tables were created.
+
+### Authentication and security
+
+- Better Auth owns credential accounts, `scrypt` password handling, verification/reset records, session cookies and the `/api/auth/[...all]` handler. Email verification is required before login; verification and reset expire after one hour; reset revokes existing sessions; automatic sign-in after verification is disabled.
+- User `status`, `role`, `phoneNumber`, and `phoneVerifiedAt` are server-owned Better Auth additional fields. Phone fields cannot be supplied through auth input and phone verification remains null. Optional `preferredLocale` accepts only the database `app_locale` enum (`en | fr`).
+- Sessions expire after seven days and refresh at most daily. Cookies use the `fikjou3` prefix, provider defaults for `HttpOnly`/`SameSite`, and forced `Secure` in production. Better Auth origin and Fetch Metadata CSRF checks remain enabled; only the configured `APP_URL` is trusted. Redirects are additionally restricted to parsed relative paths inside the active locale.
+- Auth rate limiting is enabled in every environment and persisted in PostgreSQL; no in-memory production fallback exists. Limits are: signup 5/15 minutes, login 10/15 minutes, verification resend 3/15 minutes, reset request 5/15 minutes, reset consume 5/15 minutes, and a 60/minute default. IPv6 keys collapse at `/64`. `AUTH_TRUSTED_IP_HEADER` is explicit, but deployment proxy trust must be revalidated in Phase 11/12 before production.
+- `requireAuthenticated`, `requireActive`, `requireVerified`, `requireOwner`, and `requireAdmin` are reusable policy guards with stable safe error categories. Session principals are loaded server-side. Public/private user projections select allow-listed columns at query time.
+
+### Email delivery
+
+- Verification/reset delivery uses a provider-neutral `EmailSender` boundary. Development mode writes restrictive JSON files containing the delivery payload to ignored `.tmp/email-outbox`; it never logs links or tokens. Production runtime rejects development delivery, and `EMAIL_DELIVERY_MODE=provider` deliberately fails until a real adapter is selected. This is a documented deployment prerequisite, not a paid-provider coupling.
+
+### Internationalization
+
+- `next-intl` owns top-level always-prefixed `/en` and `/fr` routing, root/cookie/browser negotiation, safe unsupported-locale handling, repository message resources, server/client translation access and navigation helpers. `FIK_LOCALE` is a same-site, root-scoped preference cookie and is never an authorization input.
+- English and French auth/shell resources have exact leaf-key parity enforced by `i18n:check`; missing/extra keys fail the gate. `Intl` helpers use `en-MA`/`fr-MA`, `Africa/Casablanca`, and MAD without changing stored values. Arabic is not selectable; logical CSS and the Unicode/RTL smoke fixture remain.
+
+### Deterministic reference data
+
+- Stable UUID upserts seed Morocco (`MA`, `MAD`), 6 cities, 12 areas and 9 categories. Active rows have exactly two translation rows: 2 country, 12 city, 24 area and 18 category translations. Category French labels use normal marketplace wording. Tag identity/translation tables exist as required foundations, but no speculative controlled tags are seeded before listing requirements need them.
+- Seed executes in one transaction, is safe to rerun, and the quality gate runs it twice against real disposable PostgreSQL before asserting exact counts and EN/FR completeness.
+
+### Verification evidence and limitations
+
+- Unit tests cover locale contract, formatting foundations, safe redirects, authorization error branches and design/RTL foundations. PostgreSQL integration covers migration/schema behavior, seed replay, locale rejection, Unicode, seller uniqueness, location integrity, history-preserving delete restrictions, Better Auth verification/login/session/reset/token reuse, session revocation, suspension policy, DTO exposure, CSRF, enumeration-safe reset and persisted throttling.
+- Final verification on 2026-09-30 ran the complete `npm run quality` pipeline successfully: dependency/lockfile dry-run, formatting, zero-warning ESLint, strict TypeScript, 41-key EN/FR parity, 18 unit tests, 7 real-PostgreSQL integration tests, focused migration replay, focused deterministic seed rerun, 4 Chromium Playwright tests, production build and critical-level dependency audit. The migration replay applied the committed migration independently to two newly created empty databases and asserted all 16 public tables on each.
+- On Windows, migration replay and seed-rerun gates execute as focused Vitest suites using the same proven `pg-embedded` lifecycle as integration tests. Each suite owns its disposable PostgreSQL instance, closes every `pg` pool before `postgres.stop()` and `postgres.cleanup()`, and integration files run serially. This replaced a standalone CLI wrapper that completed its assertions but could leave npm waiting on the child-process lifecycle; it does not replace PostgreSQL with mocks, omit migration application, or weaken seed/idempotency assertions. The final quality process returned normally, and no disposable random-port PostgreSQL process remained afterward.
+- Playwright covers root negotiation, EN/FR auth rendering, deep language switching/query preservation, unsupported locales and 320px French registration. The production build emits only locale-prefixed UI routes plus the Better Auth handler.
+- `npm audit` reports four moderate development-only findings inherited by the current stable Drizzle Kit through deprecated `@esbuild-kit`/old `esbuild`. The advisory affects an exposed esbuild development server; this project uses Drizzle Kit only as a local migration generator and exposes no such server. No high or critical vulnerability exists. Downgrading to npm's suggested Drizzle Kit `0.18.1` would break the selected compatible toolchain; re-evaluate when a stable fixed Drizzle Kit release is available.
+- Phase 02 must select no email vendor. A production email provider adapter and verified production proxy/header configuration remain later deployment prerequisites. No seller onboarding, marketplace public shell, listing, discovery or other Phase 02+ behavior was started.
