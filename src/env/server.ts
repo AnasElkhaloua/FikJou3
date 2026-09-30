@@ -11,6 +11,7 @@ const serverEnvironmentSchema = z.object({
   DATABASE_URL: z.string().min(1),
   DEV_EMAIL_OUTBOX_DIR: z.string().min(1).default(".tmp/email-outbox"),
   EMAIL_DELIVERY_MODE: z.enum(["development", "provider"]),
+  FIK_MARKETPLACE_PREVIEW: z.enum(["populated", "empty"]),
   NODE_ENV: z.enum(["development", "test", "production"]),
 });
 
@@ -36,6 +37,9 @@ export const serverEnv = Object.freeze(
       (isProductionBuild || process.env.NODE_ENV !== "production"
         ? "development"
         : undefined),
+    FIK_MARKETPLACE_PREVIEW:
+      process.env.FIK_MARKETPLACE_PREVIEW ??
+      (process.env.NODE_ENV === "development" ? "populated" : "empty"),
     NODE_ENV: process.env.NODE_ENV ?? "development",
   }),
 );
@@ -47,5 +51,14 @@ if (
 ) {
   throw new Error(
     "Development email delivery is forbidden in the production runtime.",
+  );
+}
+
+if (
+  serverEnv.NODE_ENV === "production" &&
+  serverEnv.FIK_MARKETPLACE_PREVIEW === "populated"
+) {
+  throw new Error(
+    "Development marketplace preview fixtures are forbidden in production.",
   );
 }

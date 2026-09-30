@@ -19,7 +19,7 @@
     "test": "vitest run --config vitest.config.ts",
     "test:watch": "vitest --config vitest.config.ts",
     "test:integration": "vitest run --config vitest.integration.config.ts",
-    "test:e2e": "playwright test",
+    "test:e2e": "tsx scripts/run-playwright.ts",
     "test:all": "npm run test && npm run test:integration && npm run test:e2e",
     "deps:check": "npm ci --ignore-scripts --dry-run",
     "db:generate": "drizzle-kit generate",
@@ -48,6 +48,7 @@
     "zod": "4.6.5"
   },
   "devDependencies": {
+    "@axe-core/playwright": "4.13.0",
     "@playwright/test": "1.63.0",
     "@tailwindcss/postcss": "4.3.3",
     "@types/node": "22.20.4",

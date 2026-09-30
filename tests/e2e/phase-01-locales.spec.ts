@@ -6,7 +6,7 @@ test("negotiates root to English and renders the localized shell", async ({
   await page.goto("/");
   await expect(page).toHaveURL(/\/en$/u);
   await expect(page.getByRole("heading", { level: 1 })).toHaveText(
-    "Your account foundation is ready.",
+    "What are you craving?",
   );
   await expect(page.locator("html")).toHaveAttribute("lang", "en");
 });

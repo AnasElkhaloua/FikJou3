@@ -2,10 +2,11 @@ import { defineConfig, devices } from "@playwright/test";
 
 export default defineConfig({
   testDir: "./tests/e2e",
-  fullyParallel: true,
+  fullyParallel: false,
   forbidOnly: Boolean(process.env.CI),
   retries: process.env.CI ? 2 : 0,
   reporter: process.env.CI ? "github" : "list",
+  workers: 1,
   use: {
     baseURL: "http://127.0.0.1:3000",
     trace: "on-first-retry",
@@ -17,9 +18,14 @@ export default defineConfig({
     },
   ],
   webServer: {
-    command: "npm run dev",
-    url: "http://127.0.0.1:3000",
-    reuseExistingServer: !process.env.CI,
+    command: "npm run dev -- --port 3000",
+    env: {
+      APP_URL: "http://127.0.0.1:3000",
+      FIK_MARKETPLACE_PREVIEW:
+        process.env.FIK_MARKETPLACE_PREVIEW ?? "populated",
+    },
+    reuseExistingServer: false,
     timeout: 120_000,
+    url: "http://127.0.0.1:3000",
   },
 });

@@ -3,12 +3,12 @@ import { GeistSans } from "geist/font/sans";
 import { hasLocale, NextIntlClientProvider } from "next-intl";
 import { getMessages, getTranslations } from "next-intl/server";
 import { notFound } from "next/navigation";
-import { Suspense } from "react";
 
+import { MobileNavigation } from "@/components/shell/mobile-navigation";
+import { SiteHeader } from "@/components/shell/site-header";
 import { clientEnv } from "@/env/client";
-import { LanguageSwitcher } from "@/i18n/language-switcher";
+import { serverEnv } from "@/env/server";
 import { routing } from "@/i18n/routing";
-import { SignOutButton } from "@/modules/auth/sign-out-button";
 
 import "../globals.css";
 
@@ -25,7 +25,22 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await params;
   if (!hasLocale(routing.locales, locale)) notFound();
   const t = await getTranslations({ locale, namespace: "Metadata" });
-  return { description: t("description"), title: t("title") };
+
+  return {
+    description: t("description"),
+    metadataBase: new URL(serverEnv.APP_URL),
+    openGraph: {
+      description: t("description"),
+      locale: locale === "fr" ? "fr_MA" : "en_MA",
+      siteName: clientEnv.appName,
+      title: t("title"),
+      type: "website",
+    },
+    title: {
+      default: t("title"),
+      template: `%s | ${clientEnv.appName}`,
+    },
+  };
 }
 
 export default async function LocaleLayout({ children, params }: Props) {
@@ -43,19 +58,9 @@ export default async function LocaleLayout({ children, params }: Props) {
             {t("skipToContent")}
           </a>
           <div className="app-frame">
-            <header className="site-header">
-              <span className="brand" dir="auto">
-                {clientEnv.appName}
-              </span>
-              <div className="header-actions">
-                <Suspense fallback={null}>
-                  <LanguageSwitcher />
-                </Suspense>
-                <SignOutButton />
-                <span className="phase-badge">{t("phase")}</span>
-              </div>
-            </header>
+            <SiteHeader />
             {children}
+            <MobileNavigation />
           </div>
         </NextIntlClientProvider>
       </body>

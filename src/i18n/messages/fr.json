@@ -1,21 +1,98 @@
 {
   "Metadata": {
     "title": "Fik Jou3 ?",
-    "description": "Trouvez des plats faits maison près de chez vous au Maroc."
+    "description": "Trouvez des plats faits maison près de chez vous au Maroc.",
+    "homeTitle": "Des plats maison près de chez vous",
+    "homeDescription": "Découvrez des plats marocains, des pâtisseries et des recettes du quotidien préparés près de chez vous."
   },
   "Shell": {
     "skipToContent": "Aller au contenu",
-    "phase": "Base de données et compte",
     "language": "Langue",
     "english": "Anglais",
-    "french": "Français"
+    "french": "Français",
+    "login": "Se connecter"
+  },
+  "Navigation": {
+    "primaryLabel": "Navigation principale",
+    "mobileLabel": "Navigation mobile",
+    "home": "Accueil",
+    "explore": "Explorer",
+    "favorites": "Favoris",
+    "messages": "Messages",
+    "sell": "Vendre",
+    "profile": "Profil",
+    "comingSoon": "Disponible dans une prochaine étape"
   },
   "Home": {
-    "eyebrow": "Phase 01",
-    "title": "La base de votre compte est prête.",
-    "description": "L’authentification sécurisée et l’accès localisé au compte sont maintenant disponibles. La découverte des offres arrivera dans une phase ultérieure.",
-    "register": "Créer un compte",
-    "login": "Se connecter"
+    "eyebrow": "Fait maison, près de vous",
+    "title": "Qu’est-ce qui vous fait envie ?",
+    "description": "Découvrez des plats préparés avec soin par des cuisiniers amateurs partout au Maroc.",
+    "search": {
+      "query": "Plat ou spécialité",
+      "queryPlaceholder": "Couscous, msemen, gâteau…",
+      "location": "Lieu",
+      "locationPlaceholder": "Ville ou quartier",
+      "submit": "Rechercher"
+    },
+    "categories": {
+      "kicker": "Selon vos envies",
+      "title": "Trouvez de quoi vous régaler"
+    },
+    "marketplace": {
+      "kicker": "Des cuisines du quartier",
+      "title": "Quelques idées gourmandes",
+      "description": "Un premier aperçu des plats et douceurs que vous pourrez découvrir sur Fik Jou3 ?.",
+      "explore": "Tout explorer",
+      "previewNotice": "Aperçu de développement — ces plats sont illustratifs et ne sont pas des annonces publiées."
+    },
+    "card": {
+      "pickup": "À emporter",
+      "delivery": "Livraison",
+      "newSeller": "Nouveau cuisinier",
+      "reviews": "{count, plural, one {# avis} other {# avis}}",
+      "imageUnavailable": "Photo du plat à venir",
+      "favoriteUnavailable": "Les favoris seront disponibles plus tard"
+    },
+    "empty": {
+      "title": "Rien de gourmand ici pour le moment.",
+      "description": "Les cuisiniers du quartier apparaîtront ici dès qu’ils commenceront à partager leurs plats.",
+      "action": "Créer un compte"
+    },
+    "seller": {
+      "title": "Vous cuisinez des plats qu’on adore ?",
+      "description": "Créez votre compte dès maintenant. Les outils pour partager vos plats arrivent ensuite.",
+      "action": "Commencer"
+    }
+  },
+  "Explore": {
+    "eyebrow": "Explorer",
+    "title": "Votre prochain plat maison préféré commence ici",
+    "description": "La recherche et les filtres sont en préparation. En attendant, découvrez les catégories qui organiseront la place de marché.",
+    "search": {
+      "query": "Plat ou spécialité",
+      "queryPlaceholder": "Qu’avez-vous envie de manger ?",
+      "location": "Lieu",
+      "locationPlaceholder": "Ville ou quartier",
+      "submit": "Rechercher"
+    },
+    "categories": "Explorer les catégories",
+    "empty": {
+      "title": "La découverte se prépare.",
+      "description": "Les vraies annonces apparaîtront ici lorsque les cuisiniers publieront leurs plats.",
+      "action": "Retour à l’accueil"
+    }
+  },
+  "Footer": {
+    "description": "Des plats maison, préparés plus près.",
+    "arrangements": "Acheteurs et cuisiniers conviennent directement des disponibilités, du retrait, de la livraison et du paiement."
+  },
+  "States": {
+    "errorTitle": "Impossible de charger cette page.",
+    "errorDescription": "Un problème inattendu est survenu. Réessayez dans un instant.",
+    "errorAction": "Réessayer",
+    "notFoundTitle": "Page introuvable",
+    "notFoundDescription": "La page que vous recherchez n’est pas disponible.",
+    "notFoundAction": "Retour à l’accueil"
   },
   "Auth": {
     "name": "Nom",

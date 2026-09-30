@@ -1,21 +1,98 @@
 {
   "Metadata": {
     "title": "Fik Jou3?",
-    "description": "Find homemade food near you in Morocco."
+    "description": "Find homemade food near you in Morocco.",
+    "homeTitle": "Homemade food near you",
+    "homeDescription": "Browse homemade Moroccan food, pastries and everyday dishes from cooks in your area."
   },
   "Shell": {
     "skipToContent": "Skip to content",
-    "phase": "Database & Auth",
     "language": "Language",
     "english": "English",
-    "french": "French"
+    "french": "French",
+    "login": "Log in"
+  },
+  "Navigation": {
+    "primaryLabel": "Primary navigation",
+    "mobileLabel": "Mobile navigation",
+    "home": "Home",
+    "explore": "Explore",
+    "favorites": "Favorites",
+    "messages": "Messages",
+    "sell": "Sell",
+    "profile": "Profile",
+    "comingSoon": "Coming in a later step"
   },
   "Home": {
-    "eyebrow": "Phase 01",
-    "title": "Your account foundation is ready.",
-    "description": "Secure authentication and localized account access are now available. Marketplace discovery begins in a later phase.",
-    "register": "Create account",
-    "login": "Log in"
+    "eyebrow": "Homemade, nearby",
+    "title": "What are you craving?",
+    "description": "Discover food made with care by home cooks around Morocco.",
+    "search": {
+      "query": "Food or dish",
+      "queryPlaceholder": "Couscous, msemen, cake…",
+      "location": "Location",
+      "locationPlaceholder": "City or area",
+      "submit": "Search"
+    },
+    "categories": {
+      "kicker": "Browse your way",
+      "title": "Find something delicious"
+    },
+    "marketplace": {
+      "kicker": "From local kitchens",
+      "title": "Fresh finds for you",
+      "description": "A first look at the dishes and treats you’ll be able to discover on Fik Jou3?.",
+      "explore": "Explore all",
+      "previewNotice": "Development design preview — these dishes are illustrative and are not live marketplace listings."
+    },
+    "card": {
+      "pickup": "Pickup",
+      "delivery": "Delivery",
+      "newSeller": "New cook",
+      "reviews": "{count, plural, one {# review} other {# reviews}}",
+      "imageUnavailable": "Food photo coming soon",
+      "favoriteUnavailable": "Favorites will be available later"
+    },
+    "empty": {
+      "title": "Nothing tasty here yet.",
+      "description": "Local cooks will appear here once they begin sharing their food.",
+      "action": "Create an account"
+    },
+    "seller": {
+      "title": "Cook something people will love?",
+      "description": "Create your account now. The tools for sharing food are coming next.",
+      "action": "Get started"
+    }
+  },
+  "Explore": {
+    "eyebrow": "Explore",
+    "title": "Your next homemade favorite starts here",
+    "description": "Search and filtering are being prepared. For now, browse the categories that will organize the marketplace.",
+    "search": {
+      "query": "Food or dish",
+      "queryPlaceholder": "What would you like to eat?",
+      "location": "Location",
+      "locationPlaceholder": "City or area",
+      "submit": "Search"
+    },
+    "categories": "Browse categories",
+    "empty": {
+      "title": "Discovery is getting ready.",
+      "description": "Real marketplace results will appear here when cooks publish their food.",
+      "action": "Back to Home"
+    }
+  },
+  "Footer": {
+    "description": "Homemade food, made closer.",
+    "arrangements": "Buyers and cooks arrange availability, pickup, delivery and payment directly."
+  },
+  "States": {
+    "errorTitle": "We couldn’t load this page.",
+    "errorDescription": "Something unexpected happened. Try again in a moment.",
+    "errorAction": "Try again",
+    "notFoundTitle": "Page not found",
+    "notFoundDescription": "The page you’re looking for isn’t available.",
+    "notFoundAction": "Go to Home"
   },
   "Auth": {
     "name": "Name",
