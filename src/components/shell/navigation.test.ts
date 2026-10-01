@@ -8,8 +8,8 @@ import {
 
 describe("public shell navigation", () => {
   it("exposes only implemented destinations as links", () => {
-    expect(desktopNavigation.filter((item) => item.href)).toHaveLength(1);
-    expect(mobileNavigation.filter((item) => item.href)).toHaveLength(2);
+    expect(desktopNavigation.filter((item) => item.href)).toHaveLength(2);
+    expect(mobileNavigation.filter((item) => item.href)).toHaveLength(3);
   });
 
   it("marks exact home and nested Explore destinations correctly", () => {

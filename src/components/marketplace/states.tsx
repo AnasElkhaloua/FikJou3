@@ -10,7 +10,7 @@ export function EmptyState({
 }: {
   action: string;
   description: string;
-  href: "/" | "/register";
+  href: "/" | "/explore" | "/register";
   title: string;
 }) {
   return (

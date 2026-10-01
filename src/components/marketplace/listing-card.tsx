@@ -1,7 +1,8 @@
 import { Heart, ImageOff, MapPin, Star } from "lucide-react";
 
 import type { AppLocale } from "@/i18n/config";
-import { formatMad } from "@/i18n/formats";
+import { formatMadDecimal } from "@/i18n/formats";
+import { Link } from "@/i18n/navigation";
 
 import type { ListingCardView } from "./listing-card-types";
 
@@ -26,7 +27,11 @@ const imagePosition = {
 
 export function ListingCard({ labels, listing, locale }: ListingCardProps) {
   return (
-    <article className="listing-card" data-preview-listing={listing.id}>
+    <article
+      className="listing-card"
+      data-listing-card={listing.id}
+      data-preview-listing={listing.href ? undefined : listing.id}
+    >
       <div className="listing-media">
         {listing.image ? (
           <div
@@ -60,8 +65,14 @@ export function ListingCard({ labels, listing, locale }: ListingCardProps) {
       </div>
       <div className="listing-body">
         <div className="listing-heading-row">
-          <h3 dir="auto">{listing.title}</h3>
-          <strong>{formatMad(Number(listing.priceAmount), locale)}</strong>
+          <h3 dir="auto">
+            {listing.href ? (
+              <Link href={listing.href}>{listing.title}</Link>
+            ) : (
+              listing.title
+            )}
+          </h3>
+          <strong>{formatMadDecimal(listing.priceAmount, locale)}</strong>
         </div>
         <p className="seller-name" dir="auto">
           {listing.sellerName}

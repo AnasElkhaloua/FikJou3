@@ -29,6 +29,12 @@ export const sellerStatus = pgEnum("seller_status", [
   "PAUSED",
   "SUSPENDED",
 ]);
+export const listingStatus = pgEnum("listing_status", [
+  "DRAFT",
+  "ACTIVE",
+  "PAUSED",
+  "REMOVED",
+]);
 
 export const users = pgTable(
   "users",
@@ -391,6 +397,195 @@ export const tagTranslations = pgTable(
   (table) => [
     primaryKey({ columns: [table.tagId, table.locale] }),
     check("tag_translation_name_nonblank", sql`btrim(${table.name}) <> ''`),
+  ],
+);
+
+export const listings = pgTable(
+  "listings",
+  {
+    id: uuid("id").defaultRandom().primaryKey(),
+    sellerProfileId: uuid("seller_profile_id")
+      .notNull()
+      .references(() => sellerProfiles.id, { onDelete: "restrict" }),
+    categoryId: uuid("category_id")
+      .notNull()
+      .references(() => categories.id, { onDelete: "restrict" }),
+    cityId: uuid("city_id").notNull(),
+    areaId: uuid("area_id"),
+    title: text("title").notNull(),
+    slug: text("slug").notNull(),
+    description: text("description").default("").notNull(),
+    priceAmount: numeric("price_amount", { precision: 12, scale: 2 }),
+    currencyCode: text("currency_code").default("MAD").notNull(),
+    pickupAvailable: boolean("pickup_available").default(false).notNull(),
+    deliveryAvailable: boolean("delivery_available").default(false).notNull(),
+    status: listingStatus("status").default("DRAFT").notNull(),
+    publishedAt: timestamp("published_at", {
+      mode: "date",
+      withTimezone: true,
+    }),
+    privateLatitude: numeric("private_latitude", { precision: 9, scale: 6 }),
+    privateLongitude: numeric("private_longitude", {
+      precision: 9,
+      scale: 6,
+    }),
+    publicLatitude: numeric("public_latitude", { precision: 9, scale: 6 }),
+    publicLongitude: numeric("public_longitude", { precision: 9, scale: 6 }),
+    publicLocationVersion: text("public_location_version"),
+    createdAt: timestamp("created_at", { mode: "date", withTimezone: true })
+      .defaultNow()
+      .notNull(),
+    updatedAt: timestamp("updated_at", { mode: "date", withTimezone: true })
+      .defaultNow()
+      .notNull(),
+  },
+  (table) => [
+    unique("listings_slug_unique").on(table.slug),
+    foreignKey({
+      columns: [table.cityId],
+      foreignColumns: [cities.id],
+      name: "listings_city_fk",
+    }).onDelete("restrict"),
+    foreignKey({
+      columns: [table.cityId, table.areaId],
+      foreignColumns: [areas.cityId, areas.id],
+      name: "listings_city_area_fk",
+    }).onDelete("restrict"),
+    check("listings_title_nonblank", sql`btrim(${table.title}) <> ''`),
+    check("listings_title_length", sql`char_length(${table.title}) <= 120`),
+    check(
+      "listings_description_length",
+      sql`char_length(${table.description}) <= 2000`,
+    ),
+    check(
+      "listings_price_positive",
+      sql`${table.priceAmount} is null or ${table.priceAmount} > 0`,
+    ),
+    check(
+      "listings_currency_format",
+      sql`${table.currencyCode} ~ '^[A-Z]{3}$'`,
+    ),
+    check("listings_currency_mad", sql`${table.currencyCode} = 'MAD'`),
+    check(
+      "listings_active_fulfillment",
+      sql`${table.status} <> 'ACTIVE' or ${table.pickupAvailable} or ${table.deliveryAvailable}`,
+    ),
+    check(
+      "listings_private_coordinates_pair",
+      sql`(${table.privateLatitude} is null) = (${table.privateLongitude} is null)`,
+    ),
+    check(
+      "listings_public_coordinates_pair",
+      sql`(${table.publicLatitude} is null) = (${table.publicLongitude} is null)`,
+    ),
+    check(
+      "listings_private_latitude_range",
+      sql`${table.privateLatitude} is null or ${table.privateLatitude} between -90 and 90`,
+    ),
+    check(
+      "listings_private_longitude_range",
+      sql`${table.privateLongitude} is null or ${table.privateLongitude} between -180 and 180`,
+    ),
+    check(
+      "listings_public_latitude_range",
+      sql`${table.publicLatitude} is null or ${table.publicLatitude} between -90 and 90`,
+    ),
+    check(
+      "listings_public_longitude_range",
+      sql`${table.publicLongitude} is null or ${table.publicLongitude} between -180 and 180`,
+    ),
+    check(
+      "listings_active_publish_fields",
+      sql`${table.status} <> 'ACTIVE' or (${table.priceAmount} is not null and ${table.areaId} is not null and ${table.publishedAt} is not null and ${table.publicLatitude} is not null and ${table.publicLongitude} is not null and ${table.publicLocationVersion} is not null)`,
+    ),
+    index("listings_seller_status_idx").on(table.sellerProfileId, table.status),
+    index("listings_category_status_idx").on(table.categoryId, table.status),
+    index("listings_city_area_status_idx").on(
+      table.cityId,
+      table.areaId,
+      table.status,
+    ),
+    index("listings_published_at_idx").on(table.publishedAt),
+    index("listings_price_idx").on(table.priceAmount),
+  ],
+);
+
+export const listingImages = pgTable(
+  "listing_images",
+  {
+    id: uuid("id").defaultRandom().primaryKey(),
+    listingId: uuid("listing_id")
+      .notNull()
+      .references(() => listings.id, { onDelete: "cascade" }),
+    storageKey: text("storage_key").notNull(),
+    deliveryUrl: text("delivery_url").notNull(),
+    width: integer("width").notNull(),
+    height: integer("height").notNull(),
+    mimeType: text("mime_type").notNull(),
+    byteSize: integer("byte_size").notNull(),
+    sortOrder: integer("sort_order").notNull(),
+    createdAt: timestamp("created_at", { mode: "date", withTimezone: true })
+      .defaultNow()
+      .notNull(),
+  },
+  (table) => [
+    unique("listing_images_storage_key_unique").on(table.storageKey),
+    unique("listing_images_listing_order_unique").on(
+      table.listingId,
+      table.sortOrder,
+    ),
+    check("listing_images_width_positive", sql`${table.width} > 0`),
+    check("listing_images_height_positive", sql`${table.height} > 0`),
+    check("listing_images_size_positive", sql`${table.byteSize} > 0`),
+    check(
+      "listing_images_order_range",
+      sql`${table.sortOrder} between 0 and 5`,
+    ),
+    check("listing_images_mime_webp", sql`${table.mimeType} = 'image/webp'`),
+    index("listing_images_listing_idx").on(table.listingId),
+  ],
+);
+
+export const listingTags = pgTable(
+  "listing_tags",
+  {
+    listingId: uuid("listing_id")
+      .notNull()
+      .references(() => listings.id, { onDelete: "cascade" }),
+    tagId: uuid("tag_id")
+      .notNull()
+      .references(() => tags.id, { onDelete: "restrict" }),
+  },
+  (table) => [
+    primaryKey({ columns: [table.listingId, table.tagId] }),
+    index("listing_tags_tag_idx").on(table.tagId),
+  ],
+);
+
+export const storageCleanupJobs = pgTable(
+  "storage_cleanup_jobs",
+  {
+    id: uuid("id").defaultRandom().primaryKey(),
+    storageKey: text("storage_key").notNull(),
+    attempts: integer("attempts").default(0).notNull(),
+    lastError: text("last_error"),
+    createdAt: timestamp("created_at", { mode: "date", withTimezone: true })
+      .defaultNow()
+      .notNull(),
+    completedAt: timestamp("completed_at", {
+      mode: "date",
+      withTimezone: true,
+    }),
+  },
+  (table) => [
+    check(
+      "storage_cleanup_jobs_attempts_nonnegative",
+      sql`${table.attempts} >= 0`,
+    ),
+    index("storage_cleanup_jobs_pending_idx").on(
+      table.completedAt,
+      table.createdAt,
+    ),
   ],
 );
 

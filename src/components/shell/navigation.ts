@@ -3,20 +3,20 @@ export type ShellDestination =
 
 export type ShellNavigationItem = Readonly<{
   destination: ShellDestination;
-  href: "/" | "/explore" | null;
+  href: "/" | "/explore" | "/sell" | null;
 }>;
 
 export const desktopNavigation: readonly ShellNavigationItem[] = [
   { destination: "explore", href: "/explore" },
   { destination: "favorites", href: null },
   { destination: "messages", href: null },
-  { destination: "sell", href: null },
+  { destination: "sell", href: "/sell" },
 ];
 
 export const mobileNavigation: readonly ShellNavigationItem[] = [
   { destination: "home", href: "/" },
   { destination: "explore", href: "/explore" },
-  { destination: "sell", href: null },
+  { destination: "sell", href: "/sell" },
   { destination: "messages", href: null },
   { destination: "profile", href: null },
 ];

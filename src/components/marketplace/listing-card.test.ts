@@ -1,6 +1,12 @@
 import { createElement } from "react";
+import type { ReactNode } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
+
+vi.mock("@/i18n/navigation", () => ({
+  Link: ({ children, href }: { children: ReactNode; href: string }) =>
+    createElement("a", { href }, children),
+}));
 
 import { ListingCard } from "./listing-card";
 import type { ListingCardView } from "./listing-card-types";

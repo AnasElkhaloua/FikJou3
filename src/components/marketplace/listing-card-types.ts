@@ -1,6 +1,6 @@
 export type FulfillmentMode = "pickup" | "delivery";
 
-export type PreviewImage = Readonly<{
+export type ListingCardImage = Readonly<{
   alt: string;
   position: "start" | "center" | "end";
   src: string;
@@ -9,8 +9,9 @@ export type PreviewImage = Readonly<{
 export type ListingCardView = Readonly<{
   categorySlug: string;
   fulfillment: readonly FulfillmentMode[];
+  href?: string;
   id: string;
-  image: PreviewImage | null;
+  image: ListingCardImage | null;
   location: string;
   priceAmount: string;
   rating: number | null;
