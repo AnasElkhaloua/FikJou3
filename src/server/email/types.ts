@@ -1,4 +1,5 @@
 export type TransactionalEmail = Readonly<{
+  html: string;
   kind: "email-verification" | "password-reset";
   locale: "en" | "fr";
   recipient: string;

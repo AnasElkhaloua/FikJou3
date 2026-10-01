@@ -1,8 +1,11 @@
 import "server-only";
 
-import { serverEnv } from "@/env/server";
+import { Resend } from "resend";
+
+import { emailProviderConfiguration, serverEnv } from "@/env/server";
 
 import { DevelopmentFileEmailSender } from "./development-sender";
+import { ResendEmailSender } from "./resend-sender";
 import type { EmailSender } from "./types";
 
 function createEmailSender(): EmailSender {
@@ -10,8 +13,13 @@ function createEmailSender(): EmailSender {
     return new DevelopmentFileEmailSender(serverEnv.DEV_EMAIL_OUTBOX_DIR);
   }
 
-  throw new Error(
-    "EMAIL_DELIVERY_MODE=provider requires a production email adapter before deployment.",
+  if (!emailProviderConfiguration) {
+    throw new Error("Provider email configuration is unavailable.");
+  }
+
+  return new ResendEmailSender(
+    new Resend(emailProviderConfiguration.apiKey),
+    emailProviderConfiguration.from,
   );
 }
 

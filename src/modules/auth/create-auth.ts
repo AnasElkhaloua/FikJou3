@@ -16,6 +16,51 @@ type CreateAuthOptions = Readonly<{
   secret: string;
 }>;
 
+function escapeHtml(value: string): string {
+  return value
+    .replaceAll("&", "&amp;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;");
+}
+
+function transactionalEmailContent(
+  kind: "email-verification" | "password-reset",
+  locale: "en" | "fr",
+  url: string,
+) {
+  const escapedUrl = escapeHtml(url);
+  const french = locale === "fr";
+  const verification = kind === "email-verification";
+  const subject = verification
+    ? french
+      ? "Vérifiez votre adresse e-mail Fik Jou3 ?"
+      : "Verify your Fik Jou3? email address"
+    : french
+      ? "Réinitialisez votre mot de passe Fik Jou3 ?"
+      : "Reset your Fik Jou3? password";
+  const action = verification
+    ? french
+      ? "Vérifier mon adresse e-mail"
+      : "Verify my email address"
+    : french
+      ? "Réinitialiser mon mot de passe"
+      : "Reset my password";
+  const instruction = french
+    ? "Ce lien sécurisé est à usage unique et expire dans une heure."
+    : "This secure link is single-use and expires in one hour.";
+  const ignore = french
+    ? "Si vous n’avez pas demandé cette action, vous pouvez ignorer cet e-mail."
+    : "If you did not request this action, you can ignore this email.";
+
+  return {
+    html: `<div><p>Fik Jou3?</p><p>${instruction}</p><p><a href="${escapedUrl}">${action}</a></p><p>${ignore}</p></div>`,
+    subject,
+    text: `${instruction}\n\n${action}: ${url}\n\n${ignore}`,
+  };
+}
+
 export function createAuth(options: CreateAuthOptions) {
   async function localeForUser(user: { id: string }): Promise<"en" | "fr"> {
     const [record] = await options.database
@@ -53,18 +98,16 @@ export function createAuth(options: CreateAuthOptions) {
       revokeSessionsOnPasswordReset: true,
       sendResetPassword: async ({ url, user }) => {
         const locale = await localeForUser(user);
+        const content = transactionalEmailContent(
+          "password-reset",
+          locale,
+          url,
+        );
         await options.emailSender.send({
+          ...content,
           kind: "password-reset",
           locale,
           recipient: user.email,
-          subject:
-            locale === "fr"
-              ? "Réinitialisez votre mot de passe Fik Jou3 ?"
-              : "Reset your Fik Jou3? password",
-          text:
-            locale === "fr"
-              ? `Ouvrez ce lien à usage unique dans l’heure : ${url}`
-              : `Open this single-use link within one hour: ${url}`,
         });
       },
     },
@@ -75,18 +118,16 @@ export function createAuth(options: CreateAuthOptions) {
       sendOnSignUp: true,
       sendVerificationEmail: async ({ url, user }) => {
         const locale = await localeForUser(user);
+        const content = transactionalEmailContent(
+          "email-verification",
+          locale,
+          url,
+        );
         await options.emailSender.send({
+          ...content,
           kind: "email-verification",
           locale,
           recipient: user.email,
-          subject:
-            locale === "fr"
-              ? "Vérifiez votre adresse e-mail Fik Jou3 ?"
-              : "Verify your Fik Jou3? email address",
-          text:
-            locale === "fr"
-              ? `Ouvrez ce lien à usage unique dans l’heure : ${url}`
-              : `Open this single-use link within one hour: ${url}`,
         });
       },
     },

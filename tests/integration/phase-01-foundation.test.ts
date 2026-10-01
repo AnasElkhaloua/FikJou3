@@ -167,6 +167,8 @@ describe("Phase 01 PostgreSQL and auth foundation", () => {
     expect(signUp.status).toBe(200);
     expect(delivered.at(-1)?.kind).toBe("email-verification");
     expect(delivered.at(-1)?.locale).toBe("fr");
+    expect(delivered.at(-1)?.html).toContain("Fik Jou3?");
+    expect(delivered.at(-1)?.html).toContain("Vérifier mon adresse e-mail");
 
     const preVerificationLogin = await auth.handler(
       request("/api/auth/sign-in/email", { email, password: oldPassword }),
@@ -177,6 +179,7 @@ describe("Phase 01 PostgreSQL and auth foundation", () => {
       .at(-1)
       ?.text.match(/https?:\/\/\S+/u)?.[0];
     expect(verificationURL).toBeDefined();
+    expect(verificationURL?.startsWith(baseURL)).toBe(true);
     const verify = await auth.handler(request(verificationURL!));
     expect([200, 302]).toContain(verify.status);
 
@@ -248,6 +251,9 @@ describe("Phase 01 PostgreSQL and auth foundation", () => {
     );
     expect(resetRequest.status).toBe(200);
     const resetURL = delivered.at(-1)?.text.match(/https?:\/\/\S+/u)?.[0];
+    expect(delivered.at(-1)?.kind).toBe("password-reset");
+    expect(delivered.at(-1)?.html).toContain("Réinitialiser mon mot de passe");
+    expect(resetURL?.startsWith(baseURL)).toBe(true);
     const resetToken = resetURL
       ? new URL(resetURL).pathname.split("/").at(-1)
       : null;

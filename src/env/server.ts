@@ -2,6 +2,7 @@ import "server-only";
 
 import { z } from "zod";
 
+import { validateEmailDeliveryPolicy } from "./email-policy";
 import { assertStoragePolicy } from "./storage-policy";
 
 const serverEnvironmentSchema = z.object({
@@ -13,9 +14,11 @@ const serverEnvironmentSchema = z.object({
   DATABASE_URL: z.string().min(1),
   DEV_EMAIL_OUTBOX_DIR: z.string().min(1).default(".tmp/email-outbox"),
   EMAIL_DELIVERY_MODE: z.enum(["development", "provider"]),
+  EMAIL_FROM: z.string().optional(),
   FIK_MARKETPLACE_PREVIEW: z.enum(["populated", "empty"]),
   STORAGE_DRIVER: z.enum(["local", "cloudinary"]),
   LOCAL_UPLOAD_DIR: z.string().min(1),
+  RESEND_API_KEY: z.string().optional(),
   CLOUDINARY_CLOUD_NAME: z.string().min(1).optional(),
   CLOUDINARY_API_KEY: z.string().min(1).optional(),
   CLOUDINARY_API_SECRET: z.string().min(1).optional(),
@@ -44,6 +47,7 @@ export const serverEnv = Object.freeze(
       (isProductionBuild || process.env.NODE_ENV !== "production"
         ? "development"
         : undefined),
+    EMAIL_FROM: process.env.EMAIL_FROM,
     FIK_MARKETPLACE_PREVIEW:
       process.env.FIK_MARKETPLACE_PREVIEW ??
       (process.env.NODE_ENV === "development" ? "populated" : "empty"),
@@ -51,6 +55,7 @@ export const serverEnv = Object.freeze(
       process.env.STORAGE_DRIVER ??
       (process.env.NODE_ENV === "production" ? "cloudinary" : "local"),
     LOCAL_UPLOAD_DIR: process.env.LOCAL_UPLOAD_DIR ?? ".tmp/uploads",
+    RESEND_API_KEY: process.env.RESEND_API_KEY,
     CLOUDINARY_CLOUD_NAME: process.env.CLOUDINARY_CLOUD_NAME,
     CLOUDINARY_API_KEY: process.env.CLOUDINARY_API_KEY,
     CLOUDINARY_API_SECRET: process.env.CLOUDINARY_API_SECRET,
@@ -58,15 +63,13 @@ export const serverEnv = Object.freeze(
   }),
 );
 
-if (
-  serverEnv.NODE_ENV === "production" &&
-  !isProductionBuild &&
-  serverEnv.EMAIL_DELIVERY_MODE === "development"
-) {
-  throw new Error(
-    "Development email delivery is forbidden in the production runtime.",
-  );
-}
+export const emailProviderConfiguration = validateEmailDeliveryPolicy({
+  apiKey: serverEnv.RESEND_API_KEY,
+  from: serverEnv.EMAIL_FROM,
+  mode: serverEnv.EMAIL_DELIVERY_MODE,
+  productionBuild: isProductionBuild,
+  runtime: serverEnv.NODE_ENV,
+});
 
 assertStoragePolicy({
   apiKey: serverEnv.CLOUDINARY_API_KEY,
