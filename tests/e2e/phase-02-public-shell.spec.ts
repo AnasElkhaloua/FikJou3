@@ -4,7 +4,7 @@ import { mkdir } from "node:fs/promises";
 
 const visualQaDirectory = ".tmp/visual-qa";
 
-test("English Home renders database categories and populated development preview", async ({
+test("English Home renders database categories and recent real listings", async ({
   page,
 }) => {
   await page.goto("/en");
@@ -12,9 +12,8 @@ test("English Home renders database categories and populated development preview
     page.getByRole("heading", { name: "What are you craving?" }),
   ).toBeVisible();
   await expect(page.getByText("Moroccan", { exact: true })).toBeVisible();
-  await expect(page.locator("[data-preview-listing]")).toHaveCount(10);
-  await expect(page.getByText("Couscous aux sept légumes")).toBeVisible();
-  await expect(page.getByText("Development design preview")).toBeVisible();
+  await expect(page.locator("[data-listing-card]")).toHaveCount(8);
+  await expect(page.getByText("Pastilla poulet maison")).toBeVisible();
   await expect(page.getByRole("link", { name: "Log in" })).toBeVisible();
 });
 
@@ -29,15 +28,15 @@ test("French Home localizes product UI while preserving authored listing content
     page.getByText("Cuisine marocaine", { exact: true }),
   ).toBeVisible();
   await expect(page.getByText("Gâteaux", { exact: true })).toBeVisible();
-  await expect(page.getByText("Couscous aux sept légumes")).toBeVisible();
+  await expect(page.getByText("Pastilla poulet maison")).toBeVisible();
 });
 
 test("language switching preserves the Explore route and safe query state", async ({
   page,
 }) => {
-  await page.goto("/fr/explore?q=rfissa&location=Rabat");
+  await page.goto("/fr/explore?q=rfissa&city=rabat");
   await page.getByRole("link", { name: "EN", exact: true }).click();
-  await expect(page).toHaveURL(/\/en\/explore\?q=rfissa&location=Rabat$/u);
+  await expect(page).toHaveURL(/\/en\/explore\?q=rfissa&city=rabat$/u);
   await expect(page.getByRole("heading", { level: 1 })).toContainText(
     "Your next homemade favorite",
   );
@@ -88,6 +87,7 @@ test("public navigation is keyboard reachable and Home has no serious accessibil
   page,
 }) => {
   await page.goto("/en");
+  await expect(page.locator("[data-listing-card]")).toHaveCount(8);
   await page.keyboard.press("Tab");
   await expect(
     page.getByRole("link", { name: "Skip to content" }),
@@ -135,7 +135,7 @@ test("captures populated public-shell visual QA artifacts", async ({
   await expect(
     page.getByRole("heading", { name: "What are you craving?" }),
   ).toBeVisible();
-  await expect(page.locator("[data-preview-listing]")).toHaveCount(10);
+  await expect(page.locator("[data-listing-card]")).toHaveCount(8);
   await page.screenshot({
     caret: "initial",
     fullPage: true,
@@ -145,7 +145,7 @@ test("captures populated public-shell visual QA artifacts", async ({
   await expect(
     page.getByRole("heading", { name: "Qu’est-ce qui vous fait envie ?" }),
   ).toBeVisible();
-  await expect(page.locator("[data-preview-listing]")).toHaveCount(10);
+  await expect(page.locator("[data-listing-card]")).toHaveCount(8);
   await page.screenshot({
     caret: "initial",
     fullPage: true,
@@ -166,7 +166,7 @@ test("captures populated public-shell visual QA artifacts", async ({
   await expect(
     page.getByRole("heading", { name: "What are you craving?" }),
   ).toBeVisible();
-  await expect(page.locator("[data-preview-listing]")).toHaveCount(10);
+  await expect(page.locator("[data-listing-card]")).toHaveCount(8);
   await page.screenshot({
     caret: "initial",
     fullPage: true,
@@ -176,7 +176,7 @@ test("captures populated public-shell visual QA artifacts", async ({
   await expect(
     page.getByRole("heading", { name: "Qu’est-ce qui vous fait envie ?" }),
   ).toBeVisible();
-  await expect(page.locator("[data-preview-listing]")).toHaveCount(10);
+  await expect(page.locator("[data-listing-card]")).toHaveCount(8);
   await page.screenshot({
     caret: "initial",
     fullPage: true,
@@ -184,25 +184,25 @@ test("captures populated public-shell visual QA artifacts", async ({
   });
 });
 
-test("@empty development mode renders the honest marketplace state", async ({
+test("a discovery query with no matches renders the honest empty state", async ({
   page,
 }) => {
-  await page.goto("/en");
-  await expect(page.locator("[data-preview-listing]")).toHaveCount(0);
+  await page.goto("/en/explore?q=definitely-not-a-real-dish");
+  await expect(page.locator("[data-listing-card]")).toHaveCount(0);
   await expect(page.locator('[data-marketplace-state="empty"]')).toContainText(
-    "Nothing tasty here yet.",
+    "No dishes match these filters.",
   );
   await mkdir(visualQaDirectory, { recursive: true });
   await page.setViewportSize({ height: 900, width: 1440 });
   await page.screenshot({
     caret: "initial",
     fullPage: true,
-    path: `${visualQaDirectory}/empty-home-desktop.png`,
+    path: `${visualQaDirectory}/empty-explore-desktop.png`,
   });
   await page.setViewportSize({ height: 844, width: 390 });
   await page.screenshot({
     caret: "initial",
     fullPage: true,
-    path: `${visualQaDirectory}/empty-home-mobile.png`,
+    path: `${visualQaDirectory}/empty-explore-mobile.png`,
   });
 });

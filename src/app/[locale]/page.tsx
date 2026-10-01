@@ -9,11 +9,13 @@ import { CategoryList } from "@/components/marketplace/category-list";
 import { ListingGrid } from "@/components/marketplace/listing-grid";
 import { SearchShell } from "@/components/marketplace/search-shell";
 import { SiteFooter } from "@/components/shell/site-footer";
-import { loadMarketplacePreview } from "@/dev/load-marketplace-preview";
 import { type AppLocale } from "@/i18n/config";
 import { Link } from "@/i18n/navigation";
 import { routing } from "@/i18n/routing";
 import { listActiveCategories } from "@/modules/categories/queries";
+import { discoverListings } from "@/modules/discovery/queries";
+import { parseDiscoveryParams } from "@/modules/discovery/params";
+import { listActiveLocationOptions } from "@/modules/locations/queries";
 
 type PageProps = Readonly<{
   params: Promise<{ locale: string }>;
@@ -47,11 +49,13 @@ export default async function HomePage({ params }: PageProps) {
   const { locale: requestedLocale } = await params;
   if (!hasLocale(routing.locales, requestedLocale)) notFound();
   const locale = requestedLocale as AppLocale;
-  const [t, categories, listings] = await Promise.all([
+  const [t, categories, locations, discovery] = await Promise.all([
     getTranslations({ locale, namespace: "Home" }),
     listActiveCategories(locale),
-    loadMarketplacePreview(),
+    listActiveLocationOptions(locale),
+    discoverListings(locale, parseDiscoveryParams({}).input),
   ]);
+  const listings = discovery.listings.slice(0, 8);
 
   const listingLabels = {
     delivery: t("card.delivery"),
@@ -76,6 +80,7 @@ export default async function HomePage({ params }: PageProps) {
           </div>
           <SearchShell
             action={`/${locale}/explore`}
+            cities={locations.cities}
             labels={{
               location: t("search.location"),
               locationPlaceholder: t("search.locationPlaceholder"),
@@ -114,9 +119,6 @@ export default async function HomePage({ params }: PageProps) {
               <ArrowRight aria-hidden="true" size={17} />
             </Link>
           </div>
-          {listings.length > 0 ? (
-            <p className="preview-notice">{t("marketplace.previewNotice")}</p>
-          ) : null}
           <ListingGrid
             empty={{
               action: t("empty.action"),

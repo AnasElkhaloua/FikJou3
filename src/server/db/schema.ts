@@ -2,6 +2,7 @@ import {
   bigint,
   boolean,
   check,
+  customType,
   foreignKey,
   index,
   integer,
@@ -16,6 +17,12 @@ import {
   uuid,
 } from "drizzle-orm/pg-core";
 import { sql } from "drizzle-orm";
+
+const tsvector = customType<{ data: string }>({
+  dataType() {
+    return "tsvector";
+  },
+});
 
 export const appLocale = pgEnum("app_locale", ["en", "fr"]);
 export const userStatus = pgEnum("user_status", [
@@ -415,6 +422,9 @@ export const listings = pgTable(
     title: text("title").notNull(),
     slug: text("slug").notNull(),
     description: text("description").default("").notNull(),
+    searchVector: tsvector("search_vector").generatedAlwaysAs(
+      sql`setweight(to_tsvector('simple', coalesce("title", '')), 'A') || setweight(to_tsvector('simple', coalesce("description", '')), 'B')`,
+    ),
     priceAmount: numeric("price_amount", { precision: 12, scale: 2 }),
     currencyCode: text("currency_code").default("MAD").notNull(),
     pickupAvailable: boolean("pickup_available").default(false).notNull(),
@@ -506,7 +516,13 @@ export const listings = pgTable(
       table.status,
     ),
     index("listings_published_at_idx").on(table.publishedAt),
+    index("listings_status_published_id_idx").on(
+      table.status,
+      table.publishedAt.desc(),
+      table.id.desc(),
+    ),
     index("listings_price_idx").on(table.priceAmount),
+    index("listings_search_vector_idx").using("gin", table.searchVector),
   ],
 );
 

@@ -40,10 +40,9 @@
     },
     "marketplace": {
       "kicker": "Des cuisines du quartier",
-      "title": "Quelques idées gourmandes",
-      "description": "Un premier aperçu des plats et douceurs que vous pourrez découvrir sur Fik Jou3 ?.",
-      "explore": "Tout explorer",
-      "previewNotice": "Aperçu de développement — ces plats sont illustratifs et ne sont pas des annonces publiées."
+      "title": "Partagés récemment",
+      "description": "Les derniers plats et douceurs publiés par les cuisiniers du quartier.",
+      "explore": "Tout explorer"
     },
     "card": {
       "pickup": "À emporter",
@@ -67,19 +66,68 @@
   "Explore": {
     "eyebrow": "Explorer",
     "title": "Votre prochain plat maison préféré commence ici",
-    "description": "La recherche et les filtres sont en préparation. En attendant, découvrez les catégories qui organiseront la place de marché.",
+    "description": "Découvrez de vrais plats de cuisiniers locaux, puis affinez les résultats par lieu, prix ou mode de remise.",
+    "metadataTitle": "Explorer les plats faits maison",
+    "metadataDescription": "Recherchez et filtrez les annonces actives de plats faits maison partout au Maroc.",
     "search": {
       "query": "Plat ou spécialité",
       "queryPlaceholder": "Qu’avez-vous envie de manger ?",
-      "location": "Lieu",
-      "locationPlaceholder": "Ville ou quartier",
       "submit": "Rechercher"
     },
-    "categories": "Explorer les catégories",
+    "filters": {
+      "label": "Filtres",
+      "city": "Ville",
+      "area": "Quartier",
+      "category": "Catégorie",
+      "allCities": "Toutes les villes",
+      "allAreas": "Tous les quartiers",
+      "allCategories": "Toutes les catégories",
+      "minPrice": "Prix minimum",
+      "maxPrice": "Prix maximum",
+      "pickup": "À emporter",
+      "delivery": "Livraison",
+      "apply": "Appliquer les filtres",
+      "clearAll": "Tout effacer"
+    },
+    "sort": {
+      "label": "Trier par",
+      "newest": "Plus récentes",
+      "priceAsc": "Prix croissant",
+      "priceDesc": "Prix décroissant"
+    },
+    "results": {
+      "kicker": "Place de marché",
+      "title": "Cuisine faite maison",
+      "count": "{count, plural, =0 {Aucun résultat} one {# résultat} other {# résultats}}"
+    },
+    "invalidParameters": "Certains filtres invalides ont été ignorés en toute sécurité. Vérifiez les filtres actifs puis réessayez.",
     "empty": {
-      "title": "La découverte se prépare.",
-      "description": "Les vraies annonces apparaîtront ici lorsque les cuisiniers publieront leurs plats.",
-      "action": "Retour à l’accueil"
+      "title": "Rien de gourmand ici pour le moment.",
+      "description": "Les annonces actives apparaîtront ici lorsque les cuisiniers du quartier les publieront.",
+      "action": "Créer un compte",
+      "filteredTitle": "Aucun plat ne correspond à ces filtres.",
+      "filteredDescription": "Retirez un filtre ou élargissez votre recherche pour voir plus de plats maison.",
+      "clear": "Effacer les filtres"
+    },
+    "pagination": {
+      "label": "Pages de résultats",
+      "previous": "Précédente",
+      "next": "Suivante",
+      "page": "Page {page} sur {count}"
+    },
+    "card": {
+      "pickup": "À emporter",
+      "delivery": "Livraison",
+      "newSeller": "Nouveau cuisinier",
+      "reviews": "{count, plural, one {# avis} other {# avis}}",
+      "imageUnavailable": "Photo du plat indisponible",
+      "favoriteUnavailable": "Les favoris seront disponibles plus tard"
+    },
+    "categoryPage": {
+      "eyebrow": "Catégorie",
+      "description": "Découvrez les annonces actives de {category} proposées par des cuisiniers locaux.",
+      "metadataTitle": "Cuisine maison : {category}",
+      "metadataDescription": "Découvrez les annonces actives de {category} proposées par des cuisiniers locaux sur Fik Jou3 ?"
     }
   },
   "Seller": {

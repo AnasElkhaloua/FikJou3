@@ -17,7 +17,7 @@ export function AccountActions() {
 
   if (!session.data) {
     return (
-      <Link className="account-link" href="/login">
+      <Link aria-label={t("login")} className="account-link" href="/login">
         <LogIn aria-hidden="true" size={18} strokeWidth={1.8} />
         <span>{t("login")}</span>
       </Link>

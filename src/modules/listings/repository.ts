@@ -9,12 +9,15 @@ import {
   categoryTranslations,
   cities,
   cityTranslations,
+  countries,
   listingImages,
   listings,
   sellerProfiles,
   users,
 } from "@/server/db/schema";
 import type * as schema from "@/server/db/schema";
+
+import { publicListingEligibilityConditions } from "./public-eligibility";
 
 export async function selectOwnedListings(
   database: NodePgDatabase<typeof schema>,
@@ -107,6 +110,7 @@ export async function selectPublicListingBySlug(
       ),
     )
     .innerJoin(cities, eq(cities.id, listings.cityId))
+    .innerJoin(countries, eq(countries.id, cities.countryId))
     .innerJoin(
       cityTranslations,
       and(
@@ -123,15 +127,7 @@ export async function selectPublicListingBySlug(
       ),
     )
     .where(
-      and(
-        eq(listings.slug, slug),
-        eq(listings.status, "ACTIVE"),
-        eq(sellerProfiles.status, "ACTIVE"),
-        eq(users.status, "ACTIVE"),
-        eq(categories.active, true),
-        eq(cities.active, true),
-        eq(areas.active, true),
-      ),
+      and(eq(listings.slug, slug), ...publicListingEligibilityConditions()),
     )
     .limit(1);
   if (!listing || !listing.priceAmount) return null;

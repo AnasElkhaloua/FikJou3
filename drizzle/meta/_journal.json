@@ -15,6 +15,20 @@
       "when": 1790797241446,
       "tag": "0001_plain_maggott",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1790854462171,
+      "tag": "0002_absurd_xavin",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1790855668863,
+      "tag": "0003_slippery_red_skull",
+      "breakpoints": true
     }
   ]
 }

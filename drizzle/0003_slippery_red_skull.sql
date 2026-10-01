@@ -1,0 +1,1 @@
+CREATE INDEX "listings_status_published_id_idx" ON "listings" USING btree ("status","published_at" DESC NULLS LAST,"id" DESC NULLS LAST);

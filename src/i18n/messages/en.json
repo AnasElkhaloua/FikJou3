@@ -40,10 +40,9 @@
     },
     "marketplace": {
       "kicker": "From local kitchens",
-      "title": "Fresh finds for you",
-      "description": "A first look at the dishes and treats you’ll be able to discover on Fik Jou3?.",
-      "explore": "Explore all",
-      "previewNotice": "Development design preview — these dishes are illustrative and are not live marketplace listings."
+      "title": "Recently shared",
+      "description": "The newest active dishes and treats shared by local cooks.",
+      "explore": "Explore all"
     },
     "card": {
       "pickup": "Pickup",
@@ -67,19 +66,68 @@
   "Explore": {
     "eyebrow": "Explore",
     "title": "Your next homemade favorite starts here",
-    "description": "Search and filtering are being prepared. For now, browse the categories that will organize the marketplace.",
+    "description": "Browse real dishes from local cooks, then narrow the results by place, price, or how you want to receive them.",
+    "metadataTitle": "Explore homemade food",
+    "metadataDescription": "Search and filter active homemade food listings across Morocco.",
     "search": {
       "query": "Food or dish",
       "queryPlaceholder": "What would you like to eat?",
-      "location": "Location",
-      "locationPlaceholder": "City or area",
       "submit": "Search"
     },
-    "categories": "Browse categories",
+    "filters": {
+      "label": "Filters",
+      "city": "City",
+      "area": "Area",
+      "category": "Category",
+      "allCities": "All cities",
+      "allAreas": "All areas",
+      "allCategories": "All categories",
+      "minPrice": "Minimum price",
+      "maxPrice": "Maximum price",
+      "pickup": "Pickup",
+      "delivery": "Delivery",
+      "apply": "Apply filters",
+      "clearAll": "Clear all"
+    },
+    "sort": {
+      "label": "Sort by",
+      "newest": "Newest",
+      "priceAsc": "Price: low to high",
+      "priceDesc": "Price: high to low"
+    },
+    "results": {
+      "kicker": "Marketplace",
+      "title": "Homemade food",
+      "count": "{count, plural, =0 {No results} one {# result} other {# results}}"
+    },
+    "invalidParameters": "Some invalid filters were safely ignored. Review the current filters and try again.",
     "empty": {
-      "title": "Discovery is getting ready.",
-      "description": "Real marketplace results will appear here when cooks publish their food.",
-      "action": "Back to Home"
+      "title": "Nothing tasty here yet.",
+      "description": "Active listings will appear here when local cooks publish them.",
+      "action": "Create an account",
+      "filteredTitle": "No dishes match these filters.",
+      "filteredDescription": "Clear a filter or broaden your search to see more homemade food.",
+      "clear": "Clear filters"
+    },
+    "pagination": {
+      "label": "Search result pages",
+      "previous": "Previous",
+      "next": "Next",
+      "page": "Page {page} of {count}"
+    },
+    "card": {
+      "pickup": "Pickup",
+      "delivery": "Delivery",
+      "newSeller": "New cook",
+      "reviews": "{count, plural, one {# review} other {# reviews}}",
+      "imageUnavailable": "Food photo unavailable",
+      "favoriteUnavailable": "Favorites will be available later"
+    },
+    "categoryPage": {
+      "eyebrow": "Category",
+      "description": "Browse active {category} listings from local cooks.",
+      "metadataTitle": "{category} homemade food",
+      "metadataDescription": "Browse active {category} listings from local cooks on Fik Jou3?."
     }
   },
   "Seller": {

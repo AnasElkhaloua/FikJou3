@@ -2,12 +2,14 @@ import { and, asc, eq, inArray, isNull, or } from "drizzle-orm";
 import type { NodePgDatabase } from "drizzle-orm/node-postgres";
 
 import type { AppLocale } from "@/i18n/config";
+import { publicListingEligibilityConditions } from "@/modules/listings/public-eligibility";
 import {
   areas,
   areaTranslations,
   categories,
   cities,
   cityTranslations,
+  countries,
   listingImages,
   listings,
   sellerProfiles,
@@ -57,6 +59,7 @@ export async function selectPublicSellerBySlug(
     .from(sellerProfiles)
     .innerJoin(users, eq(users.id, sellerProfiles.userId))
     .innerJoin(cities, eq(cities.id, sellerProfiles.cityId))
+    .innerJoin(countries, eq(countries.id, cities.countryId))
     .innerJoin(
       cityTranslations,
       and(
@@ -78,6 +81,7 @@ export async function selectPublicSellerBySlug(
         eq(sellerProfiles.status, "ACTIVE"),
         eq(users.status, "ACTIVE"),
         eq(cities.active, true),
+        eq(countries.active, true),
         or(isNull(sellerProfiles.areaId), eq(areas.active, true)),
       ),
     )
@@ -97,8 +101,11 @@ export async function selectPublicSellerBySlug(
       title: listings.title,
     })
     .from(listings)
+    .innerJoin(sellerProfiles, eq(sellerProfiles.id, listings.sellerProfileId))
+    .innerJoin(users, eq(users.id, sellerProfiles.userId))
     .innerJoin(categories, eq(categories.id, listings.categoryId))
     .innerJoin(cities, eq(cities.id, listings.cityId))
+    .innerJoin(countries, eq(countries.id, cities.countryId))
     .innerJoin(
       cityTranslations,
       and(
@@ -117,10 +124,7 @@ export async function selectPublicSellerBySlug(
     .where(
       and(
         eq(listings.sellerProfileId, seller.id),
-        eq(listings.status, "ACTIVE"),
-        eq(categories.active, true),
-        eq(cities.active, true),
-        eq(areas.active, true),
+        ...publicListingEligibilityConditions(),
       ),
     )
     .orderBy(asc(listings.publishedAt));

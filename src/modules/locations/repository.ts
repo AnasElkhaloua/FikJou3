@@ -14,6 +14,7 @@ export type LocationOption = Readonly<{
   id: string;
   name: string;
   parentId?: string;
+  slug: string;
 }>;
 
 export async function selectActiveLocationOptions(
@@ -22,7 +23,7 @@ export async function selectActiveLocationOptions(
 ) {
   const [cityRows, areaRows] = await Promise.all([
     database
-      .select({ id: cities.id, name: cityTranslations.name })
+      .select({ id: cities.id, name: cityTranslations.name, slug: cities.slug })
       .from(cities)
       .innerJoin(cityTranslations, eq(cityTranslations.cityId, cities.id))
       .where(and(eq(cities.active, true), eq(cityTranslations.locale, locale)))
@@ -32,6 +33,7 @@ export async function selectActiveLocationOptions(
         id: areas.id,
         name: areaTranslations.name,
         parentId: areas.cityId,
+        slug: areas.slug,
       })
       .from(areas)
       .innerJoin(areaTranslations, eq(areaTranslations.areaId, areas.id))

@@ -2,6 +2,7 @@ import { and, eq, or } from "drizzle-orm";
 
 import { serverEnv } from "@/env/server";
 import { isStorageKey } from "@/modules/storage/keys";
+import { publicListingEligibilityConditions } from "@/modules/listings/public-eligibility";
 import { LocalStorageAdapter } from "@/modules/storage/local-adapter";
 import { loadSessionPrincipal } from "@/server/authorization/session";
 import { db } from "@/server/db/client";
@@ -11,6 +12,7 @@ import {
   areas,
   categories,
   cities,
+  countries,
   sellerProfiles,
   users,
 } from "@/server/db/schema";
@@ -46,21 +48,12 @@ export async function GET(
     .innerJoin(users, eq(users.id, sellerProfiles.userId))
     .innerJoin(categories, eq(categories.id, listings.categoryId))
     .innerJoin(cities, eq(cities.id, listings.cityId))
+    .innerJoin(countries, eq(countries.id, cities.countryId))
     .innerJoin(areas, eq(areas.id, listings.areaId))
     .where(
       and(
         eq(listingImages.storageKey, key),
-        or(
-          and(
-            eq(listings.status, "ACTIVE"),
-            eq(sellerProfiles.status, "ACTIVE"),
-            eq(users.status, "ACTIVE"),
-            eq(categories.active, true),
-            eq(cities.active, true),
-            eq(areas.active, true),
-          ),
-          ownerCondition,
-        ),
+        or(and(...publicListingEligibilityConditions()), ownerCondition),
       ),
     )
     .limit(1);
